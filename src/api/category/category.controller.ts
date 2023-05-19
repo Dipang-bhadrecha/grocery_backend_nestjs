@@ -43,11 +43,15 @@ export class CategoryController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
   findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
   findOne(@Param('id') id: number): Promise<Category> {
     return this.categoryService.findOne(id);
   }
