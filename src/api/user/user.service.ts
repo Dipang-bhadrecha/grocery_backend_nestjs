@@ -17,7 +17,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async createUser(createUserDto: CreateUserDto): Promise<any> {
     try {
@@ -59,7 +59,7 @@ export class UserService {
   async getUserByEmail(email: string): Promise<User> {
     try {
       const result = await this.userRepository.findOne({ where: { email } });
-      result.password = undefined;
+      // result.password = undefined;
       return result;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);

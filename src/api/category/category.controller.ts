@@ -7,6 +7,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import CreateCategoryResponseDto from './dto/create-category-response.dto';
 import UpdateCategoryResponseDto from './dto/update-category-response.dto';
 import DeleteCategoryResponseDto from './dto/delete-category-response.dto';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { ROLE } from 'src/helpers/role.enum';
+import { AuthGuard } from '@nestjs/passport';
 
 
 @ApiTags('Categories')
@@ -14,6 +18,8 @@ import DeleteCategoryResponseDto from './dto/delete-category-response.dto';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) { }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Post('/create')
   @UseInterceptors(FileInterceptor('image_url'))
   async create(@Body() createCategory: CreateCategoryDto, @UploadedFile() file: Express.Multer.File): Promise<CreateCategoryResponseDto> {
@@ -22,6 +28,8 @@ export class CategoryController {
   }
 
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Put('/:id')
   @UseInterceptors(FileInterceptor('image_url'))
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateCategory: UpdateCategoryDto, @UploadedFile() file: Express.Multer.File): Promise<UpdateCategoryResponseDto> {
@@ -29,8 +37,12 @@ export class CategoryController {
     return this.categoryService.update(id, updateCategory);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Delete('/:id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteCategoryResponseDto> {
     return this.categoryService.remove(id);
   }
 }
+
+

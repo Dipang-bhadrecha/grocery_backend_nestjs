@@ -7,6 +7,10 @@ import { ApiTags } from '@nestjs/swagger';
 import CreateProductResponseDto from './dto/create-product-response.dto';
 import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
 import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { ROLE } from 'src/helpers/role.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 
 @ApiTags('product')
@@ -14,6 +18,8 @@ import UpdateCategoryResponseDto from '../category/dto/update-category-response.
 export class ProductController {
   constructor(private readonly productService: ProductService) { }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Post('/create')
   @UseInterceptors(FilesInterceptor('product', 5))
   async create(@Body() createProduct: CreateProductDto, @UploadedFiles() file: Array<Express.Multer.File>): Promise<CreateProductResponseDto> {
@@ -22,6 +28,8 @@ export class ProductController {
   }
 
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Put('/:id')
   @UseInterceptors(FilesInterceptor('product', 5))
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateProduct: UpdateProductDto, @UploadedFiles() file: Array<Express.Multer.File>): Promise<UpdateCategoryResponseDto> {
@@ -30,6 +38,8 @@ export class ProductController {
     return this.productService.update(id, updateProduct);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Delete('/:id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteCategoryResponseDto> {
     return this.productService.remove(id);
