@@ -9,7 +9,7 @@ import { LoginDto } from './dto/login-dto';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { JwtPayload } from './jwt-payload.interface';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -39,7 +39,10 @@ export class AuthService {
 
       return { accessToken };
     } catch (error) {
-      throw new HttpException(error.message,error.status || HttpStatus.INTERNAL_SERVER_ERROR)
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
