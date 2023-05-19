@@ -3,7 +3,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -11,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { log } from 'console';
+import { CreateUserResponse } from './interfaces/create-user-response-interface';
 
 @Injectable()
 export class UserService {
@@ -20,7 +19,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<any> {
+  async createUser(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     try {
       const { first_name, last_name, phone, email, password } = createUserDto;
 
@@ -61,25 +60,11 @@ export class UserService {
     try {
       const result = await this.userRepository.findOne({
         where: { email },
-        select: [
-          'id',
-          'first_name',
-          'last_name',
-          'email',
-          'phone',
-          'is_active',
-          'role',
-          'phone',
-          'created_at',
-          'updated_at',
-          'reset_password_token',
-          'reset_password_token_expire_time',
-        ],
       });
 
       return result;
-    } catch (e) {
-      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }
