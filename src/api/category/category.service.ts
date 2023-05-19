@@ -166,7 +166,6 @@ export class CategoryService {
         message: CATEGORY_DELETED_MESSAGE,
       };
     } catch (error) {
-      console.log(error);
 
       throw new HttpException(
         error.message,
