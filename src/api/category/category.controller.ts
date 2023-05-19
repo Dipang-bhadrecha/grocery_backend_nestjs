@@ -20,13 +20,18 @@ import CreateCategoryResponseDto from './dto/create-category-response.dto';
 import UpdateCategoryResponseDto from './dto/update-category-response.dto';
 import DeleteCategoryResponseDto from './dto/delete-category-response.dto';
 import { Category } from './entities/category.entity';
-
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { ROLE } from 'src/helpers/role.enum';
 
 @ApiTags('Categories')
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Post('/create')
   @UseInterceptors(FileInterceptor('image_url'))
   async create(
@@ -47,6 +52,8 @@ export class CategoryController {
     return this.categoryService.findOne(id);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Put('/:id')
   @UseInterceptors(FileInterceptor('image_url'))
   async update(
@@ -58,6 +65,8 @@ export class CategoryController {
     return this.categoryService.update(id, updateCategory);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Delete('/:id')
   async remove(
     @Param('id', ParseIntPipe) id: number,

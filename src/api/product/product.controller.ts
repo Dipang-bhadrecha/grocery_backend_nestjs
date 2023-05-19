@@ -20,6 +20,10 @@ import { ApiTags } from '@nestjs/swagger';
 import CreateProductResponseDto from './dto/create-product-response.dto';
 import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
 import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { ROLE } from 'src/helpers/role.enum';
+import { Roles } from '../auth/decorator/roles.decorator';
 import { Product } from './entities/product.entity';
 
 @ApiTags('product')
@@ -27,6 +31,8 @@ import { Product } from './entities/product.entity';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Post('/create')
   @UseInterceptors(FilesInterceptor('product', 5))
   async create(
@@ -51,6 +57,8 @@ export class ProductController {
     return this.productService.findOne(id);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Put('/:id')
   @UseInterceptors(FilesInterceptor('product', 5))
   async update(
@@ -65,6 +73,8 @@ export class ProductController {
     return this.productService.update(id, updateProduct);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Delete('/:id')
   async remove(
     @Param('id', ParseIntPipe) id: number,

@@ -74,9 +74,7 @@ export class ProductService {
         throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
       }
 
-      return {
-        data: products,
-      };
+      return products;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
@@ -85,11 +83,11 @@ export class ProductService {
   // get product by id
   async findOne(id: number): Promise<Product> {
     try {
-      const Product = await this.productRepository.findOneBy({ id });
-      if (!Product) {
+      const product = await this.productRepository.findOneBy({ id });
+      if (!product) {
         throw new HttpException('product not found', HttpStatus.NOT_FOUND);
       }
-      return Product;
+      return product;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
