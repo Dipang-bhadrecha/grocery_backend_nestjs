@@ -8,7 +8,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Role } from 'src/helpers/role.enum';
+import { ROLE } from 'src/helpers/role.enum';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -39,5 +39,5 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
-  role?: Role;
+  role?: ROLE;
 }

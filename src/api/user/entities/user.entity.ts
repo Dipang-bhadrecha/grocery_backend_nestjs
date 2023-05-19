@@ -1,4 +1,4 @@
-import { Role } from 'src/helpers/role.enum';
+import { ROLE } from 'src/helpers/role.enum';
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
@@ -21,8 +21,8 @@ export class User {
   @Column({ type: 'varchar',length:200, nullable: false })
   password: string;
   
-  @Column({ type: 'enum', enum: Role, default: Role.User })
-  role: Role;
+  @Column({ type: 'enum', enum: ROLE, default: ROLE.USER })
+  role: ROLE;
 
   @Column({ type: 'varchar',length:100, nullable:true})
   reset_password_token:string

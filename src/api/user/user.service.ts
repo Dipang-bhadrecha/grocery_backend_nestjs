@@ -19,7 +19,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
+  async createUser(createUserDto: CreateUserDto): Promise<any> {
     try {
       const { first_name, last_name, phone, email, password } = createUserDto;
 
@@ -43,19 +43,26 @@ export class UserService {
       await this.userRepository.save(user);
       user.password = undefined;
 
-      return user;
+      return {
+        statusCode: 201,
+        message: 'User created successfully',
+        data: user,
+      };
     } catch (error) {
-      throw new HttpException(error.message,error.status || HttpStatus.INTERNAL_SERVER_ERROR);
-      
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   async getUserByEmail(email: string): Promise<User> {
     try {
       const result = await this.userRepository.findOne({ where: { email } });
+      result.password = undefined;
       return result;
     } catch (e) {
-      throw new HttpException(e.message,HttpStatus.INTERNAL_SERVER_ERROR);  
+      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-  }  
+  }
 }
