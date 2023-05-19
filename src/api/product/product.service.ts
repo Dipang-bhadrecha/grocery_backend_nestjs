@@ -1,26 +1,112 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Product } from './entities/product.entity';
+import { Repository } from 'typeorm';
+import { PRODUCT_DELETED_MESSAGE, PRODUCT_NOTFOUND_MESSAGE, PRODUCT_UPDATED_MESSAGE } from './constraints/constraints';
+import * as path from 'path';
+import * as fs from 'fs';
+import { CategoryService } from '../category/category.service';
+import CreateProductResponseDto from './dto/create-product-response.dto';
+import { CATEGORY_CREATED_MESSAGE } from '../category/constraints/constraints';
+import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
+import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
 
 @Injectable()
 export class ProductService {
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+
+
+  constructor(
+
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+    private readonly categoryServices: CategoryService
+  ) { }
+
+
+  // create product
+  async create(createProduct: CreateProductDto): Promise<CreateProductResponseDto> {
+    try {
+
+      const product = new Product();
+      product.name = createProduct.name;
+      product.description = createProduct.description;
+      product.image_url = createProduct.image_url;
+      product.price = createProduct.price;
+      product.qty = createProduct.qty;
+      product.category = createProduct.category_id;
+
+      const result = await this.productRepository.save(product);
+      return {
+        statusCode: 201,
+        message: CATEGORY_CREATED_MESSAGE,
+        data: result
+      }
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  findAll() {
-    return `This action returns all product`;
+
+  // update product by id
+  async update(id: number, updateProduct: UpdateProductDto): Promise<UpdateCategoryResponseDto> {
+    try {
+      const productExits = await this.productRepository.find({ where: { id, is_active: true } });
+      if (productExits.length == 0) {
+        throw Object.assign(new Error(PRODUCT_NOTFOUND_MESSAGE), { status: 404 });
+      }
+
+      productExits.map((product) => {
+        product.image_url.map((val) => {
+          const filePath = path.join(__dirname, '../../../files', val);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        })
+      })
+
+      const product = new Product();
+      product.name = updateProduct.name;
+      product.description = updateProduct.description;
+      product.image_url = updateProduct.image_url;
+      product.price = updateProduct.price;
+      product.qty = updateProduct.qty;
+      product.is_active = updateProduct.is_active;
+      product.category = updateProduct.category_id;
+
+
+      const result = await this.productRepository.update(id, product);
+
+      if (result.affected > 0) {
+        return {
+          statusCode: 201,
+          message: PRODUCT_UPDATED_MESSAGE
+        }
+      }
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
+  // delete product by id
+  async remove(id: number): Promise<DeleteCategoryResponseDto> {
+    try {
+      const productExits = await this.productRepository.count({ where: { id } });
+      if (productExits == 0) {
+        throw Object.assign(new Error(PRODUCT_NOTFOUND_MESSAGE), { status: 404 });
+      }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+      const result = await this.productRepository.delete(id);
+      if (result.affected > 0) {
+        return {
+          statusCode: 201,
+          message: PRODUCT_DELETED_MESSAGE
+        }
+      }
+    } catch (error) {
+      throw new HttpException(error.message, error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }
