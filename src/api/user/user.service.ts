@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { log } from 'console';
 
 @Injectable()
 export class UserService {
@@ -58,8 +59,24 @@ export class UserService {
 
   async getUserByEmail(email: string): Promise<User> {
     try {
-      const result = await this.userRepository.findOne({ where: { email } });
-      result.password = undefined;
+      const result = await this.userRepository.findOne({
+        where: { email },
+        select: [
+          'id',
+          'first_name',
+          'last_name',
+          'email',
+          'phone',
+          'is_active',
+          'role',
+          'phone',
+          'created_at',
+          'updated_at',
+          'reset_password_token',
+          'reset_password_token_expire_time',
+        ],
+      });
+
       return result;
     } catch (e) {
       throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
