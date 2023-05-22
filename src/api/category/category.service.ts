@@ -166,7 +166,6 @@ export class CategoryService {
         message: CATEGORY_DELETED_MESSAGE,
       };
     } catch (error) {
-
       throw new HttpException(
         error.message,
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
