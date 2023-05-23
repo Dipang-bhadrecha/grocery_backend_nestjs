@@ -1,5 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsPositive, Min } from 'class-validator';
+import { IsNotEmpty, IsNumber, Min } from 'class-validator';
+import { Entity } from 'typeorm';
+
+@Entity()
 export class CreateCartDto {
   @ApiProperty()
   @IsNumber()
@@ -11,9 +14,7 @@ export class CreateCartDto {
   qty: number;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsPositive()
   @IsNumber()
+  @IsNotEmpty()
   price: number;
 }
-

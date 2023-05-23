@@ -24,6 +24,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { ROLE } from 'src/helpers/role.enum';
+import CreateResponseDto from 'src/utils/create-respons.dto';
 
 @ApiTags('Categories')
 @Controller('categories')
@@ -45,14 +46,14 @@ export class CategoryController {
   @Get()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLE.USER)
-  findAll(): Promise<Category[]> {
+  findAll(): Promise<CreateResponseDto> {
     return this.categoryService.findAll();
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLE.USER)
-  findOne(@Param('id') id: number): Promise<Category> {
+  findOne(@Param('id') id: number): Promise<CreateResponseDto> {
     return this.categoryService.findOne(id);
   }
 

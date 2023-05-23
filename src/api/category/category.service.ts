@@ -19,6 +19,11 @@ import {
 import CreateCategoryResponseDto from './dto/create-category-response.dto';
 import UpdateCategoryResponseDto from './dto/update-category-response.dto';
 import DeleteCategoryResponseDto from './dto/delete-category-response.dto';
+import {
+  CATEGORY_FOUND_SUCCESSFULLY,
+  CATEGORY_RETRIEVED_SUCCESSFULLY,
+} from 'src/helpers/message';
+import CreateResponseDto from 'src/utils/create-respons.dto';
 
 @Injectable()
 export class CategoryService {
@@ -81,23 +86,32 @@ export class CategoryService {
   }
 
   // get all categories
-  async findAll(): Promise<Category[]> {
+  async findAll(): Promise<CreateResponseDto> {
     try {
       const Categories = await this.categoryRepository.find();
-      return Categories;
+      return {
+        statusCode: 200,
+        message: CATEGORY_RETRIEVED_SUCCESSFULLY,
+        data: Categories,
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
   }
 
   // get category by id
-  async findOne(id: number): Promise<Category> {
+  async findOne(id: number): Promise<CreateResponseDto> {
     try {
       const Category = await this.categoryRepository.findOneBy({ id });
       if (!Category) {
         throw new HttpException('category not found', HttpStatus.NOT_FOUND);
       }
-      return Category;
+
+      return {
+        statusCode: 302,
+        message: CATEGORY_FOUND_SUCCESSFULLY,
+        data: Category,
+      };
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }
@@ -166,7 +180,6 @@ export class CategoryService {
         message: CATEGORY_DELETED_MESSAGE,
       };
     } catch (error) {
-
       throw new HttpException(
         error.message,
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,

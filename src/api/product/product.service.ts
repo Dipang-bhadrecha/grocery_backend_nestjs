@@ -16,6 +16,11 @@ import CreateProductResponseDto from './dto/create-product-response.dto';
 import { CATEGORY_CREATED_MESSAGE } from '../category/constraints/constraints';
 import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
 import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
+import {
+  PRODUCT_FOUND_SUCCESSFULLY,
+  PRODUCT_RETRIEVED_SUCCESSFULLY,
+} from 'src/helpers/message';
+import CreateResponseDto from 'src/utils/create-respons.dto';
 
 @Injectable()
 export class ProductService {
@@ -57,7 +62,7 @@ export class ProductService {
     name: string,
     page: number = 1,
     limit: number,
-  ): Promise<Product[] | any> {
+  ): Promise<CreateResponseDto> {
     try {
       const limit = 10;
       const skip = (page - 1) * limit;
@@ -74,22 +79,36 @@ export class ProductService {
         throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
       }
 
-      return products;
+      return {
+        statusCode: 200,
+        message: PRODUCT_RETRIEVED_SUCCESSFULLY,
+        data: products,
+      };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   // get product by id
-  async findOne(id: number): Promise<Product> {
+  async findOne(id: number): Promise<CreateResponseDto> {
     try {
       const product = await this.productRepository.findOneBy({ id });
       if (!product) {
         throw new HttpException('product not found', HttpStatus.NOT_FOUND);
       }
-      return product;
+      return {
+        statusCode: 302,
+        message: PRODUCT_FOUND_SUCCESSFULLY,
+        data: product,
+      };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

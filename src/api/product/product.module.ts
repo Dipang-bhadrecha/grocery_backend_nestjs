@@ -11,9 +11,10 @@ import { multerOptions } from 'src/helpers/fileUpload';
   imports: [
     MulterModule.register(multerOptions),
     TypeOrmModule.forFeature([Product]),
-    forwardRef(() => CategoryModule)
+    forwardRef(() => CategoryModule),
   ],
   controllers: [ProductController],
-  providers: [ProductService]
+  providers: [ProductService],
+  exports: [ProductService],
 })
-export class ProductModule { }
+export class ProductModule {}
