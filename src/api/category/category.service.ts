@@ -19,11 +19,11 @@ import {
 import CreateCategoryResponseDto from './dto/create-category-response.dto';
 import UpdateCategoryResponseDto from './dto/update-category-response.dto';
 import DeleteCategoryResponseDto from './dto/delete-category-response.dto';
-import {
-  CATEGORY_FOUND_SUCCESSFULLY,
-  CATEGORY_RETRIEVED_SUCCESSFULLY,
-} from 'src/helpers/message';
 import CreateResponseDto from 'src/utils/create-respons.dto';
+import {
+  CATEGORY_FOUND_MESSAGE,
+  CATEGORY_RETRIEVED_MESSAGE,
+} from 'src/helpers/message';
 
 @Injectable()
 export class CategoryService {
@@ -91,7 +91,7 @@ export class CategoryService {
       const Categories = await this.categoryRepository.find();
       return {
         statusCode: 200,
-        message: CATEGORY_RETRIEVED_SUCCESSFULLY,
+        message: CATEGORY_RETRIEVED_MESSAGE,
         data: Categories,
       };
     } catch (error) {
@@ -109,7 +109,7 @@ export class CategoryService {
 
       return {
         statusCode: 302,
-        message: CATEGORY_FOUND_SUCCESSFULLY,
+        message: CATEGORY_FOUND_MESSAGE,
         data: Category,
       };
     } catch (error) {

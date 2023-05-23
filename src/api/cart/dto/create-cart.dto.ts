@@ -12,9 +12,4 @@ export class CreateCartDto {
   @IsNumber({ maxDecimalPlaces: 0 })
   @Min(0)
   qty: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsNotEmpty()
-  price: number;
 }

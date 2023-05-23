@@ -12,15 +12,10 @@ import {
 import * as path from 'path';
 import * as fs from 'fs';
 import { CategoryService } from '../category/category.service';
-import CreateProductResponseDto from './dto/create-product-response.dto';
-import { CATEGORY_CREATED_MESSAGE } from '../category/constraints/constraints';
-import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
-import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
-import {
-  PRODUCT_FOUND_SUCCESSFULLY,
-  PRODUCT_RETRIEVED_SUCCESSFULLY,
-} from 'src/helpers/message';
+import { PRODUCT_CREATED_MESSAGE } from 'src/helpers/message';
 import CreateResponseDto from 'src/utils/create-respons.dto';
+import UpdateResponseDto from 'src/utils/update-response.dto';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
 
 @Injectable()
 export class ProductService {
@@ -31,9 +26,7 @@ export class ProductService {
   ) {}
 
   // create product
-  async create(
-    createProduct: CreateProductDto,
-  ): Promise<CreateProductResponseDto> {
+  async create(createProduct: CreateProductDto): Promise<CreateResponseDto> {
     try {
       const product = new Product();
       product.name = createProduct.name;
@@ -46,7 +39,7 @@ export class ProductService {
       const result = await this.productRepository.save(product);
       return {
         statusCode: 201,
-        message: CATEGORY_CREATED_MESSAGE,
+        message: PRODUCT_CREATED_MESSAGE,
         data: result,
       };
     } catch (error) {
@@ -118,7 +111,7 @@ export class ProductService {
   async update(
     id: number,
     updateProduct: UpdateProductDto,
-  ): Promise<UpdateCategoryResponseDto> {
+  ): Promise<UpdateResponseDto> {
     try {
       const productExits = await this.productRepository.find({
         where: { id, is_active: true },
@@ -164,7 +157,7 @@ export class ProductService {
   }
 
   // delete product by id
-  async remove(id: number): Promise<DeleteCategoryResponseDto> {
+  async remove(id: number): Promise<DeleteResponseDto> {
     try {
       const productExits = await this.productRepository.count({
         where: { id },

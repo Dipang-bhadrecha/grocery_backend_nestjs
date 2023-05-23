@@ -17,28 +17,28 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import CreateProductResponseDto from './dto/create-product-response.dto';
-import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
-import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { ROLE } from 'src/helpers/role.enum';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { Product } from './entities/product.entity';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
+import UpdateResponseDto from 'src/utils/update-response.dto';
+import CreateResponseDto from 'src/utils/create-respons.dto';
 
 @ApiTags('product')
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(ROLE.ADMIN)
+  // @UseGuards(AuthGuard('jwt'), RolesGuard)
+  // @Roles(ROLE.ADMIN)
   @Post('/create')
   @UseInterceptors(FilesInterceptor('product', 5))
   async create(
     @Body() createProduct: CreateProductDto,
     @UploadedFiles() file: Array<Express.Multer.File>,
-  ): Promise<CreateProductResponseDto> {
+  ): Promise<CreateResponseDto> {
     createProduct.image_url = file.map((val) => val.filename);
     return this.productService.create(createProduct);
   }
@@ -69,7 +69,7 @@ export class ProductController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateProduct: UpdateProductDto,
     @UploadedFiles() file: Array<Express.Multer.File>,
-  ): Promise<UpdateCategoryResponseDto> {
+  ): Promise<UpdateResponseDto> {
     file
       ? (updateProduct.image_url = updateProduct.image_url =
           file.map((val) => val.filename))
@@ -82,7 +82,7 @@ export class ProductController {
   @Delete('/:id')
   async remove(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<DeleteCategoryResponseDto> {
+  ): Promise<DeleteResponseDto> {
     return this.productService.remove(id);
   }
 }
