@@ -11,13 +11,14 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserResponse } from './interfaces/create-user-response-interface';
+import { USER_CREATED_MESSAGE } from 'src/helpers/message';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     try {
@@ -45,7 +46,7 @@ export class UserService {
 
       return {
         statusCode: 201,
-        message: 'User created successfully',
+        message: USER_CREATED_MESSAGE,
         data: user,
       };
     } catch (error) {
@@ -56,6 +57,7 @@ export class UserService {
     }
   }
 
+  // internal method, password is visible in result as needed in login method.
   async getUserByEmail(email: string): Promise<User> {
     try {
       const result = await this.userRepository.findOne({
