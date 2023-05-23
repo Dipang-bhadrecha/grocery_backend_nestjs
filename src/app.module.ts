@@ -6,20 +6,19 @@ import { UserModule } from './api/user/user.module';
 import { AddressModule } from './api/address/address.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/conn';
-import { CartModule } from './api/cart/cart.module';
 import { OrderModule } from './api/order/order.module';
 import { PaymentModule } from './api/payment/payment.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config),
+  imports: [
+    TypeOrmModule.forRoot(config),
     AuthModule,
     CategoryModule,
     ProductModule,
     UserModule,
     AddressModule,
-    CartModule,
     OrderModule,
-    PaymentModule
+    PaymentModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
