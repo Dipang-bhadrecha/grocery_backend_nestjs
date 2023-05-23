@@ -4,14 +4,14 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
-import { PRODUCT_DELETED_MESSAGE, PRODUCT_NOTFOUND_MESSAGE, PRODUCT_UPDATED_MESSAGE } from './constraints/constraints';
 import * as path from 'path';
 import * as fs from 'fs';
 import { CategoryService } from '../category/category.service';
-import CreateProductResponseDto from './dto/create-product-response.dto';
-import { CATEGORY_CREATED_MESSAGE } from '../category/constraints/constraints';
-import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
-import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
+import CreateResponseDto from 'src/utils/create-respons.dto';
+import UpdateResponseDto from 'src/utils/update-response.dto';
+import { CATEGORY_CREATED_MESSAGE, PRODUCT_DELETED_MESSAGE, PRODUCT_NOTFOUND_MESSAGE, PRODUCT_UPDATED_MESSAGE } from 'src/helpers/message';
+
 
 @Injectable()
 export class ProductService {
@@ -21,12 +21,11 @@ export class ProductService {
 
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    private readonly categoryServices: CategoryService
   ) { }
 
 
   // create product
-  async create(createProduct: CreateProductDto): Promise<CreateProductResponseDto> {
+  async create(createProduct: CreateProductDto): Promise<CreateResponseDto> {
     try {
 
       const product = new Product();
@@ -50,7 +49,7 @@ export class ProductService {
 
 
   // update product by id
-  async update(id: number, updateProduct: UpdateProductDto): Promise<UpdateCategoryResponseDto> {
+  async update(id: number, updateProduct: UpdateProductDto): Promise<UpdateResponseDto> {
     try {
       const productExits = await this.productRepository.find({ where: { id, is_active: true } });
       if (productExits.length == 0) {
@@ -91,7 +90,7 @@ export class ProductService {
 
 
   // delete product by id
-  async remove(id: number): Promise<DeleteCategoryResponseDto> {
+  async remove(id: number): Promise<DeleteResponseDto> {
     try {
       const productExits = await this.productRepository.count({ where: { id } });
       if (productExits == 0) {

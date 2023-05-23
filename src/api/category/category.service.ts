@@ -4,10 +4,11 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CATEGORYNAME_ALREADY_USED_MESSAGE, CATEGORY_CREATED_MESSAGE, CATEGORY_DELETED_MESSAGE, CATEGORY_NOTFOUND_MESSAGE, CATEGORY_UPDATED_MESSAGE } from './constraints/constraints';
-import CreateCategoryResponseDto from './dto/create-category-response.dto';
-import UpdateCategoryResponseDto from './dto/update-category-response.dto';
-import DeleteCategoryResponseDto from './dto/delete-category-response.dto';
+import CreateResponseDto from 'src/utils/create-respons.dto';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
+import UpdateResponseDto from 'src/utils/update-response.dto';
+import { CATEGORYNAME_ALREADY_USED_MESSAGE, CATEGORY_CREATED_MESSAGE, CATEGORY_DELETED_MESSAGE, CATEGORY_NOTFOUND_MESSAGE, CATEGORY_UPDATED_MESSAGE } from 'src/helpers/message';
+
 
 @Injectable()
 export class CategoryService {
@@ -18,7 +19,7 @@ export class CategoryService {
   ) { }
 
   // create a category
-  async create(createCategory: CreateCategoryDto): Promise<CreateCategoryResponseDto> {
+  async create(createCategory: CreateCategoryDto): Promise<CreateResponseDto> {
     try {
       const count = await this.isCategoryExits(createCategory.name, null);
 
@@ -59,7 +60,7 @@ export class CategoryService {
 
 
   // update category by id
-  async update(id: number, updateCategory: UpdateCategoryDto): Promise<UpdateCategoryResponseDto> {
+  async update(id: number, updateCategory: UpdateCategoryDto): Promise<UpdateResponseDto> {
     try {
 
       const categoryFound = await this.categoryRepository.count({ where: { id } });
@@ -90,7 +91,7 @@ export class CategoryService {
   }
 
   //delete category by id
-  async remove(id: number): Promise<DeleteCategoryResponseDto> {
+  async remove(id: number): Promise<DeleteResponseDto> {
     try {
       const categoryFound = await this.categoryRepository.count({ where: { id } });
       if (categoryFound == 0) {

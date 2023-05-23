@@ -4,13 +4,13 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import CreateProductResponseDto from './dto/create-product-response.dto';
-import DeleteCategoryResponseDto from '../category/dto/delete-category-response.dto';
-import UpdateCategoryResponseDto from '../category/dto/update-category-response.dto';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { ROLE } from 'src/helpers/role.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import CreateResponseDto from 'src/utils/create-respons.dto';
+import UpdateResponseDto from 'src/utils/update-response.dto';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
 
 
 @ApiTags('product')
@@ -22,7 +22,7 @@ export class ProductController {
   @Roles(ROLE.ADMIN)
   @Post('/create')
   @UseInterceptors(FilesInterceptor('product', 5))
-  async create(@Body() createProduct: CreateProductDto, @UploadedFiles() file: Array<Express.Multer.File>): Promise<CreateProductResponseDto> {
+  async create(@Body() createProduct: CreateProductDto, @UploadedFiles() file: Array<Express.Multer.File>): Promise<CreateResponseDto> {
     createProduct.image_url = file.map((val) => val.filename)
     return this.productService.create(createProduct);
   }
@@ -32,7 +32,7 @@ export class ProductController {
   @Roles(ROLE.ADMIN)
   @Put('/:id')
   @UseInterceptors(FilesInterceptor('product', 5))
-  async update(@Param('id', ParseIntPipe) id: number, @Body() updateProduct: UpdateProductDto, @UploadedFiles() file: Array<Express.Multer.File>): Promise<UpdateCategoryResponseDto> {
+  async update(@Param('id', ParseIntPipe) id: number, @Body() updateProduct: UpdateProductDto, @UploadedFiles() file: Array<Express.Multer.File>): Promise<UpdateResponseDto> {
 
     file ? updateProduct.image_url = updateProduct.image_url = file.map((val) => val.filename) : null
     return this.productService.update(id, updateProduct);
@@ -41,7 +41,7 @@ export class ProductController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLE.ADMIN)
   @Delete('/:id')
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteCategoryResponseDto> {
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
     return this.productService.remove(id);
   }
 }
