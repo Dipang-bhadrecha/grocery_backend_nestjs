@@ -6,7 +6,6 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import * as path from 'path';
 import * as fs from 'fs';
-import { CategoryService } from '../category/category.service';
 import DeleteResponseDto from 'src/utils/delete-response.dto';
 import CreateResponseDto from 'src/utils/create-respons.dto';
 import UpdateResponseDto from 'src/utils/update-response.dto';
