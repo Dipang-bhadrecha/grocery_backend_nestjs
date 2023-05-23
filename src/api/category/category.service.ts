@@ -16,7 +16,9 @@ import {
   CATEGORYNAME_ALREADY_USED_MESSAGE,
   CATEGORY_CREATED_MESSAGE,
   CATEGORY_DELETED_MESSAGE,
+  CATEGORY_FOUND_MESSAGE,
   CATEGORY_NOTFOUND_MESSAGE,
+  CATEGORY_RETRIEVED_MESSAGE,
   CATEGORY_UPDATED_MESSAGE,
 } from 'src/helpers/message';
 
@@ -79,25 +81,39 @@ export class CategoryService {
   }
 
   // get all categories
-  async findAll(): Promise<Category[]> {
+  async findAll(): Promise<CreateResponseDto> {
     try {
-      const Categories = await this.categoryRepository.find();
-      return Categories;
+      const categories = await this.categoryRepository.find();
+      return {
+        statusCode: 200,
+        message: CATEGORY_RETRIEVED_MESSAGE,
+        data: categories,
+      };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   // get category by id
-  async findOne(id: number): Promise<Category> {
+  async findOne(id: number): Promise<CreateResponseDto> {
     try {
-      const Category = await this.categoryRepository.findOneBy({ id });
-      if (!Category) {
+      const category = await this.categoryRepository.findOneBy({ id });
+      if (!category) {
         throw new HttpException('category not found', HttpStatus.NOT_FOUND);
       }
-      return Category;
+      return {
+        statusCode: 200,
+        message: CATEGORY_FOUND_MESSAGE,
+        data: category,
+      };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 

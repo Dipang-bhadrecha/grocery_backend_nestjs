@@ -14,6 +14,7 @@ import {
   CATEGORY_CREATED_MESSAGE,
   PRODUCT_DELETED_MESSAGE,
   PRODUCT_NOTFOUND_MESSAGE,
+  PRODUCT_RETRIEVED_MESSAGE,
   PRODUCT_UPDATED_MESSAGE,
 } from 'src/helpers/message';
 import { CategoryService } from '../category/category.service';
@@ -56,7 +57,7 @@ export class ProductService {
     name: string,
     page: number = 1,
     limit: number,
-  ): Promise<Product[] | any> {
+  ): Promise<CreateResponseDto> {
     try {
       const limit = 10;
       const skip = (page - 1) * limit;
@@ -73,22 +74,36 @@ export class ProductService {
         throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
       }
 
-      return products;
+      return {
+        statusCode: 200,
+        message: PRODUCT_RETRIEVED_MESSAGE,
+        data: products,
+      };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   // get product by id
-  async findOne(id: number): Promise<Product> {
+  async findOne(id: number): Promise<CreateResponseDto> {
     try {
       const product = await this.productRepository.findOneBy({ id });
       if (!product) {
         throw new HttpException('product not found', HttpStatus.NOT_FOUND);
       }
-      return product;
+      return {
+        statusCode: 200,
+        message: PRODUCT_RETRIEVED_MESSAGE,
+        data: product,
+      };
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
