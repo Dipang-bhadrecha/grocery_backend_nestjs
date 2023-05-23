@@ -25,7 +25,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { ROLE } from 'src/helpers/role.enum';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { Product } from './entities/product.entity';
-import CreateResponseDto from 'src/utils/create-respons.dto';
 
 @ApiTags('product')
 @Controller('products')
@@ -45,20 +44,20 @@ export class ProductController {
   }
 
   @Get()
-  // @UseGuards(AuthGuard('jwt'), RolesGuard)
-  // @Roles(ROLE.USER)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
   async findAll(
     @Query('name') name: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
-  ): Promise<CreateResponseDto> {
+  ): Promise<Product[]> {
     return this.productService.findAll(name, page, limit);
   }
 
   @Get(':id')
-  // @UseGuards(AuthGuard('jwt'), RolesGuard)
-  // @Roles(ROLE.USER)
-  findOne(@Param('id') id: number): Promise<CreateResponseDto> {
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
+  findOne(@Param('id') id: number): Promise<Product> {
     return this.productService.findOne(id);
   }
 

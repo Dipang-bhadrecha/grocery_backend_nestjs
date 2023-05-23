@@ -62,7 +62,7 @@ export class ProductService {
     name: string,
     page: number = 1,
     limit: number,
-  ): Promise<CreateResponseDto> {
+  ): Promise<Product[]> {
     try {
       const limit = 10;
       const skip = (page - 1) * limit;
@@ -79,11 +79,12 @@ export class ProductService {
         throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
       }
 
-      return {
-        statusCode: 200,
-        message: PRODUCT_RETRIEVED_SUCCESSFULLY,
-        data: products,
-      };
+      return products;
+      // return {
+      //   statusCode: 200,
+      //   message: PRODUCT_RETRIEVED_SUCCESSFULLY,
+      //   data: products,
+      // };
     } catch (error) {
       throw new HttpException(
         error.message,
@@ -93,17 +94,18 @@ export class ProductService {
   }
 
   // get product by id
-  async findOne(id: number): Promise<CreateResponseDto> {
+  async findOne(id: number): Promise<Product> {
     try {
       const product = await this.productRepository.findOneBy({ id });
       if (!product) {
         throw new HttpException('product not found', HttpStatus.NOT_FOUND);
       }
-      return {
-        statusCode: 302,
-        message: PRODUCT_FOUND_SUCCESSFULLY,
-        data: product,
-      };
+      return product;
+      // return {
+      //   statusCode: 302,
+      //   message: PRODUCT_FOUND_SUCCESSFULLY,
+      //   data: product,
+      // };
     } catch (error) {
       throw new HttpException(
         error.message,
