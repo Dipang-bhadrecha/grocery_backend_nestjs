@@ -17,14 +17,14 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { AuthGuard } from '@nestjs/passport';
-import { ROLE } from 'src/helpers/role.enum';
-import { Roles } from '../auth/decorator/roles.decorator';
-import { Product } from './entities/product.entity';
-import DeleteResponseDto from 'src/utils/delete-response.dto';
-import UpdateResponseDto from 'src/utils/update-response.dto';
 import CreateResponseDto from 'src/utils/create-respons.dto';
+import UpdateResponseDto from 'src/utils/update-response.dto';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { ROLE } from 'src/helpers/role.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Product } from './entities/product.entity';
 
 @ApiTags('product')
 @Controller('products')

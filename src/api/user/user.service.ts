@@ -3,21 +3,24 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { CreateUserResponse } from './interfaces/create-user-response-interface';
+import { USER_CREATED_MESSAGE } from 'src/helpers/message';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<any> {
+  async createUser(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
     try {
       const { first_name, last_name, phone, email, password } = createUserDto;
 
@@ -43,7 +46,7 @@ export class UserService {
 
       return {
         statusCode: 201,
-        message: 'User created successfully',
+        message: USER_CREATED_MESSAGE,
         data: user,
       };
     } catch (error) {
@@ -54,13 +57,16 @@ export class UserService {
     }
   }
 
+  // internal method, password is visible in result as needed in login method.
   async getUserByEmail(email: string): Promise<User> {
     try {
-      const result = await this.userRepository.findOne({ where: { email } });
-      // result.password = undefined;
+      const result = await this.userRepository.findOne({
+        where: { email },
+      });
+
       return result;
-    } catch (e) {
-      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

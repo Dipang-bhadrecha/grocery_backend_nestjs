@@ -8,8 +8,7 @@ export const CATEGORY_RETRIEVED_MESSAGE =
 export const CATEGORY_FOUND_MESSAGE = 'Category found successfully.';
 
 export const PRODUCT_CREATED_MESSAGE = 'Product created successFully.';
-export const PRODUCTNAME_ALREADY_USED_MESSAGE =
-  'Product name is already exits.';
+export const PRODUCTNAME_ALREADY_USED_MESSAGE = 'Product name  already exits.';
 export const PRODUCT_UPDATED_MESSAGE = 'Product updated successFully.';
 export const PRODUCT_DELETED_MESSAGE = 'Product deleted successFully.';
 export const PRODUCT_NOTFOUND_MESSAGE = 'Not Found';
@@ -26,5 +25,10 @@ export const CART_CREATED_MESSAGE = 'Product created successFully.';
 export const CART_UPDATED_MESSAGE = 'Product updated successFully.';
 export const CART_DELETED_MESSAGE = 'Product deleted successFully.';
 export const CART_NOTFOUND_MESSAGE = 'Not Found';
-export const CART_RETRIEVED_MESSAGE = "'Products retrieved successfully.'";
+export const CART_RETRIEVED_MESSAGE = "Products retrieved successfully.";
 export const CART_FOUND_MESSAGE = 'Product found successfully.';
+
+export const USER_CREATED_MESSAGE = 'User created successfully';
+export const USER_EMAIL_AREADY_EXISTS = 'Email already exists';
+export const USER_UPDATED_MESSAGE = 'User updated successfully';
+export const USER_DELETED_MESSAGE = 'User deleted successfully';

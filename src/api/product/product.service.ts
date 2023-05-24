@@ -4,18 +4,20 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
+
+import * as path from 'path';
+import * as fs from 'fs';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
+import CreateResponseDto from 'src/utils/create-respons.dto';
+import UpdateResponseDto from 'src/utils/update-response.dto';
 import {
+  CATEGORY_CREATED_MESSAGE,
+  PRODUCT_CREATED_MESSAGE,
   PRODUCT_DELETED_MESSAGE,
   PRODUCT_NOTFOUND_MESSAGE,
   PRODUCT_UPDATED_MESSAGE,
-} from './constraints/constraints';
-import * as path from 'path';
-import * as fs from 'fs';
+} from 'src/helpers/message';
 import { CategoryService } from '../category/category.service';
-import { PRODUCT_CREATED_MESSAGE } from 'src/helpers/message';
-import CreateResponseDto from 'src/utils/create-respons.dto';
-import UpdateResponseDto from 'src/utils/update-response.dto';
-import DeleteResponseDto from 'src/utils/delete-response.dto';
 
 @Injectable()
 export class ProductService {

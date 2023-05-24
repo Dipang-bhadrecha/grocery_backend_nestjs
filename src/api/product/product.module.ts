@@ -4,8 +4,8 @@ import { ProductController } from './product.controller';
 import { MulterModule } from '@nestjs/platform-express';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { CategoryModule } from '../category/category.module';
 import { multerOptions } from 'src/helpers/fileUpload';
+import { CategoryModule } from '../category/category.module';
 
 @Module({
   imports: [
