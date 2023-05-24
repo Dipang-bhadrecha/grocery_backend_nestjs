@@ -123,7 +123,7 @@ export class CartService {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
-        // return { msg: 'cart not found' };
+        throw new HttpException('cart not found', HttpStatus.NOT_FOUND);
       }
       const result = await this.cartTable.delete({ id });
       return {
