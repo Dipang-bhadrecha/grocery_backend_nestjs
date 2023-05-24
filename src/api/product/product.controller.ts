@@ -31,8 +31,8 @@ import { Product } from './entities/product.entity';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  // @UseGuards(AuthGuard('jwt'), RolesGuard)
-  // @Roles(ROLE.ADMIN)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN)
   @Post('/create')
   @UseInterceptors(FilesInterceptor('product', 5))
   async create(
@@ -50,14 +50,14 @@ export class ProductController {
     @Query('name') name: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
-  ): Promise<Product[]> {
+  ): Promise<CreateResponseDto> {
     return this.productService.findAll(name, page, limit);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLE.USER)
-  findOne(@Param('id') id: number): Promise<Product> {
+  findOne(@Param('id') id: number): Promise<CreateResponseDto> {
     return this.productService.findOne(id);
   }
 

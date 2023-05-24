@@ -31,11 +31,15 @@ export class CartService {
   ) {}
 
   //create Cart
-  async create(createCartDto: CreateCartDto, user: User): Promise<CreateResponseDto | any> {
+  async create(
+    createCartDto: CreateCartDto,
+    user: User,
+  ): Promise<CreateResponseDto | any> {
     try {
       const { product_id, qty } = createCartDto;
 
       const product = await this.productService.findOne(product_id);
+      console.log(product.data.price);
 
       const productExists = await this.cartTable
         .createQueryBuilder('cart')
@@ -46,8 +50,8 @@ export class CartService {
       if (productExists) {
         const newQty = productExists.qty + qty;
         const newPrice =
-          productExists.price + product.price * createCartDto.qty;
-        if (newQty <= product.qty) {
+          productExists.price + product.data.price * createCartDto.qty;
+        if (newQty <= product.data.qty) {
           productExists.qty = newQty;
           productExists.price = newPrice;
           return this.cartTable.save(productExists);
@@ -59,7 +63,7 @@ export class CartService {
       item.product_id = createCartDto.product_id;
       item.user_id = user.id;
       item.qty = createCartDto.qty;
-      item.price = product.price * qty;
+      item.price = product.data.price * qty;
       await this.cartTable.save(item);
       return {
         statusCode: 201,
@@ -119,7 +123,7 @@ export class CartService {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
-       throw new HttpException('cart not found', HttpStatus.NOT_FOUND )
+        // return { msg: 'cart not found' };
       }
       const result = await this.cartTable.delete({ id });
       return {
