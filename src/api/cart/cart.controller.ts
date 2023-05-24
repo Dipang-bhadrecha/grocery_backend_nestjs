@@ -44,14 +44,14 @@ export class CartController {
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLE.USER)
-  findOne(@Param('id') id: string): Promise<CreateResponseDto> {
-    return this.cartService.findOne(+id);
+  findOne(@Param('id') id: number): Promise<CreateResponseDto> {
+    return this.cartService.findOne(id);
   }
 
   @Delete('delete/:id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLE.USER)
-  remove(@Param('id') id: string): Promise<DeleteResponseDto> {
-    return this.cartService.remove(+id);
+  remove(@Param('id') id: number): Promise<DeleteResponseDto> {
+    return this.cartService.remove(id);
   }
 }
