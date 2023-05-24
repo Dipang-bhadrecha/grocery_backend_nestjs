@@ -50,14 +50,14 @@ export class ProductController {
     @Query('name') name: string,
     @Query('page') page: number,
     @Query('limit') limit: number,
-  ): Promise<Product[]> {
+  ): Promise<CreateResponseDto> {
     return this.productService.findAll(name, page, limit);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(ROLE.USER)
-  findOne(@Param('id') id: number): Promise<Product> {
+  findOne(@Param('id') id: number): Promise<CreateResponseDto> {
     return this.productService.findOne(id);
   }
 
