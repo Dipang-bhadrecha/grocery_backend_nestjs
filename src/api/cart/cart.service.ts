@@ -31,7 +31,7 @@ export class CartService {
   ) {}
 
   //create Cart
-  async create(createCartDto: CreateCartDto, user: User): Promise<object> {
+  async create(createCartDto: CreateCartDto, user: User): Promise<CreateResponseDto | any> {
     try {
       const { product_id, qty } = createCartDto;
 
@@ -75,7 +75,7 @@ export class CartService {
   }
 
   //find one by id
-  async findOne(id: number): Promise<object> {
+  async findOne(id: number): Promise<CreateResponseDto> {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
@@ -95,7 +95,7 @@ export class CartService {
   }
 
   // find all cart
-  async findAll(): Promise<object> {
+  async findAll(): Promise<CreateResponseDto> {
     try {
       const carts = await this.cartTable.find();
       if (!carts) {
@@ -115,11 +115,11 @@ export class CartService {
   }
 
   //Delete cart
-  async remove(id: number): Promise<object> {
+  async remove(id: number): Promise<CreateResponseDto> {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
-        return { msg: 'cart not found' };
+       throw new HttpException('cart not found', HttpStatus.NOT_FOUND )
       }
       const result = await this.cartTable.delete({ id });
       return {
