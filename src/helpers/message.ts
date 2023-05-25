@@ -28,3 +28,4 @@ export const CART_DELETED_MESSAGE = 'Product deleted successFully.';
 export const CART_NOTFOUND_MESSAGE = 'Not Found';
 export const CART_RETRIEVED_MESSAGE = "'Products retrieved successfully.'";
 export const CART_FOUND_MESSAGE = 'Product found successfully.';
+export const USER_NOT_FOUND_MESSAGE = 'User not found';
