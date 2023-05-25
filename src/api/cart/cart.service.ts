@@ -19,6 +19,9 @@ import {
   CART_CREATED_MESSAGE,
   CART_DELETED_MESSAGE,
   CART_FOUND_MESSAGE,
+  CART_NOTFOUND_MESSAGE,
+  OUT_OF_STOCK,
+  PRODUCT_NOTFOUND_MESSAGE,
 } from 'src/helpers/message';
 
 @Injectable()
@@ -39,7 +42,6 @@ export class CartService {
       const { product_id, qty } = createCartDto;
 
       const product = await this.productService.findOne(product_id);
-      console.log(product.data.price);
 
       const productExists = await this.cartTable
         .createQueryBuilder('cart')
@@ -54,9 +56,10 @@ export class CartService {
         if (newQty <= product.data.qty) {
           productExists.qty = newQty;
           productExists.price = newPrice;
-          return this.cartTable.save(productExists);
+          await this.cartTable.save(productExists);
+          return productExists;
         }
-        throw new HttpException('Out Of Stock', HttpStatus.NOT_FOUND);
+        throw new HttpException(OUT_OF_STOCK, HttpStatus.NOT_FOUND);
       }
 
       const item = new Cart();
@@ -83,7 +86,7 @@ export class CartService {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
-        throw new HttpException('product not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(PRODUCT_NOTFOUND_MESSAGE, HttpStatus.NOT_FOUND);
       }
       return {
         statusCode: 200,
@@ -103,7 +106,7 @@ export class CartService {
     try {
       const carts = await this.cartTable.find();
       if (!carts) {
-        throw new HttpException('cart not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(CART_NOTFOUND_MESSAGE, HttpStatus.NOT_FOUND);
       }
       return {
         statusCode: 200,
@@ -123,7 +126,7 @@ export class CartService {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
-        throw new HttpException('cart not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(CART_NOTFOUND_MESSAGE, HttpStatus.NOT_FOUND);
       }
       const result = await this.cartTable.delete({ id });
       return {
