@@ -89,9 +89,6 @@ export class CartService {
   async findOne(id: number): Promise<CreateResponseDto> {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
-      if (!cart) {
-        throw new HttpException(PRODUCT_NOTFOUND_MESSAGE, HttpStatus.NOT_FOUND);
-      }
       return {
         statusCode: 200,
         message: CART_FOUND_MESSAGE,
