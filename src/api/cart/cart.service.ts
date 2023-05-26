@@ -57,7 +57,11 @@ export class CartService {
           productExists.qty = newQty;
           productExists.price = newPrice;
           await this.cartTable.save(productExists);
-          return productExists;
+          return {
+            statusCode: 201,
+            message: CART_CREATED_MESSAGE,
+            data: productExists,
+          };
         }
         throw new HttpException(OUT_OF_STOCK, HttpStatus.NOT_FOUND);
       }
