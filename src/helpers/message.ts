@@ -29,11 +29,13 @@ export const CART_NOTFOUND_MESSAGE = 'Not Found';
 export const CART_RETRIEVED_MESSAGE = "'Products retrieved successfully.'";
 export const CART_FOUND_MESSAGE = 'Product found successfully.';
 
-export const USER_CREATED_MESSAGE = 'User created successfully';
+export const USER_CREATED_MESSAGE = 'User registered successfully';
 export const USER_UPDATED_MESSAGE = 'User updated successfully';
 export const USER_NOT_FOUND_MESSAGE = 'User not found';
 export const USER_DELETED_MESSAGE = 'User deleted successfully';
 
+export const INVALID_LOGIN_CREDENTIALS_MESSAGE =
+  'Please check your login credentials';
 export const INCORRECT_PASSWORD_MESSAGE = 'Please check your password';
 export const EMAIL_ALREADY_EXISTS_MESSAGE = 'Email already in use';
 export const PHONE_ALREADY_EXISTS_MESSAGE = 'Phone already in use';
