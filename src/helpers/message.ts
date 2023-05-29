@@ -26,7 +26,7 @@ export const CART_CREATED_MESSAGE = 'Product created successFully.';
 export const CART_UPDATED_MESSAGE = 'Product updated successFully.';
 export const CART_DELETED_MESSAGE = 'Product deleted successFully.';
 export const CART_NOTFOUND_MESSAGE = 'Not Found';
-export const CART_RETRIEVED_MESSAGE = "'Products retrieved successfully.'";
+export const CART_RETRIEVED_MESSAGE = 'Products retrieved successfully.';
 export const CART_FOUND_MESSAGE = 'Product found successfully.';
 
 export const USER_CREATED_MESSAGE = 'User registered successfully';
