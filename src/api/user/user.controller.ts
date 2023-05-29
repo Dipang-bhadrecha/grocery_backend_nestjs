@@ -7,12 +7,11 @@ import {
   ParseIntPipe,
   Param,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { CreateUserResponse } from './interfaces/create-user-response-interface';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UpdateUserRespnonse } from './interfaces/update-user-interface';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { GetUser } from '../auth/decorator/get-user.decorator';
 import { User } from './entities/user.entity';
@@ -20,6 +19,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { ROLE } from 'src/helpers/role.enum';
+import ResponseDto from 'src/utils/create-respons.dto';
 
 @Controller('users')
 export class UserController {
@@ -28,13 +28,15 @@ export class UserController {
   @Post('register')
   async userRegister(
     @Body() createUserDto: CreateUserDto,
-  ): Promise<CreateUserResponse> {
+  ): Promise<ResponseDto> {
     return this.userService.createUser(createUserDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  async getUserById(@Param('id', ParseIntPipe) id: number) {
+  async getUserById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ResponseDto> {
     return this.userService.getUserById(id);
   }
 
@@ -44,7 +46,7 @@ export class UserController {
   async updateUserById(
     @Param('id', ParseIntPipe) id: number,
     updateUserDto: UpdateUserDto,
-  ): Promise<UpdateUserRespnonse> {
+  ): Promise<ResponseDto> {
     return await this.userService.updateUserById(id, updateUserDto);
   }
 
@@ -54,7 +56,16 @@ export class UserController {
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
     @GetUser() user: User,
-  ): Promise<UpdateUserRespnonse> {
+  ): Promise<ResponseDto> {
     return this.userService.changePassword(changePasswordDto, user);
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.ADMIN, ROLE.USER)
+  @Delete(':id')
+  async deleteUserById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ResponseDto> {
+    return this.userService.deleteUserById(id);
   }
 }

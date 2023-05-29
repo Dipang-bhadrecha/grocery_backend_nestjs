@@ -10,16 +10,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { CreateUserResponse } from './interfaces/create-user-response-interface';
 import {
+  EMAIL_ALREADY_EXISTS_MESSAGE,
+  INCORRECT_PASSWORD_MESSAGE,
+  PHONE_ALREADY_EXISTS_MESSAGE,
   USER_CREATED_MESSAGE,
+  USER_DELETED_MESSAGE,
   USER_NOT_FOUND_MESSAGE,
   USER_UPDATED_MESSAGE,
 } from 'src/helpers/message';
-import { GetUserResponse } from './interfaces/get-user-interface';
+
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UpdateUserRespnonse } from './interfaces/update-user-interface';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import ResponseDto from 'src/utils/create-respons.dto';
 
 @Injectable()
 export class UserService {
@@ -28,20 +31,20 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<CreateUserResponse> {
+  async createUser(createUserDto: CreateUserDto): Promise<ResponseDto> {
     try {
       const { first_name, last_name, phone, email, password } = createUserDto;
 
       const existingUser = await this.getUserByEmail(email);
 
       if (existingUser) {
-        throw new BadRequestException('Email already exists');
+        throw new BadRequestException(EMAIL_ALREADY_EXISTS_MESSAGE);
       }
 
       const existingPhone = await this.userRepository.findOneBy({ phone });
 
       if (existingPhone) {
-        throw new BadRequestException('Phone already exists');
+        throw new BadRequestException(PHONE_ALREADY_EXISTS_MESSAGE);
       }
 
       const salt = await bcrypt.genSalt();
@@ -84,7 +87,7 @@ export class UserService {
     }
   }
 
-  async getUserById(id: number): Promise<GetUserResponse> {
+  async getUserById(id: number): Promise<ResponseDto> {
     try {
       const query = this.userRepository
         .createQueryBuilder('user')
@@ -112,7 +115,7 @@ export class UserService {
   async updateUserById(
     id: number,
     updateUserDto: UpdateUserDto,
-  ): Promise<UpdateUserRespnonse> {
+  ): Promise<ResponseDto> {
     try {
       const existinguser = await this.userRepository.find({
         where: { id, is_active: true },
@@ -148,14 +151,14 @@ export class UserService {
   async changePassword(
     changePasswordDto: ChangePasswordDto,
     user: User,
-  ): Promise<UpdateUserRespnonse> {
+  ): Promise<ResponseDto> {
     try {
       const { password, new_password } = changePasswordDto;
 
       const passwordvalidation = await bcrypt.compare(password, user.password);
 
       if (!passwordvalidation) {
-        throw new BadRequestException('Please check your password');
+        throw new BadRequestException(INCORRECT_PASSWORD_MESSAGE);
       }
 
       const salt = await bcrypt.genSalt();
@@ -168,6 +171,29 @@ export class UserService {
         statusCode: 200,
         message: 'Password changed successfully',
       };
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async deleteUserById(id: number): Promise<ResponseDto> {
+    try {
+      const user = await this.getUserById(id);
+
+      if (!user) {
+        throw new NotFoundException(USER_NOT_FOUND_MESSAGE);
+      }
+      const result = await this.userRepository.delete(id);
+
+      if (result.affected > 0) {
+        return {
+          statusCode: 201,
+          message: USER_DELETED_MESSAGE,
+        };
+      }
     } catch (error) {
       throw new HttpException(
         error.message,
