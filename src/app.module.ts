@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { config } from './config/conn';
 import { OrderModule } from './api/order/order.module';
 import { PaymentModule } from './api/payment/payment.module';
+import { CartModule } from './api/cart/cart.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { PaymentModule } from './api/payment/payment.module';
     AddressModule,
     OrderModule,
     PaymentModule,
+    CartModule,
   ],
 })
 export class AppModule {}

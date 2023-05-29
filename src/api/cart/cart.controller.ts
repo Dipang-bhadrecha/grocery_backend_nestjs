@@ -6,37 +6,52 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
 import { CartService } from './cart.service';
+import { GetUser } from '../auth/decorator/get-user.decorator';
+import { User } from '../user/entities/user.entity';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { Roles } from '../auth/decorator/roles.decorator';
+import { ROLE } from 'src/helpers/role.enum';
+import { CreateCartDto } from './dto/create-cart.dto';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
+import CreateResponseDto from 'src/utils/create-respons.dto';
+import { Product } from '../product/entities/product.entity';
 
-@Controller('cart')
+@Controller('carts')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
-  @Post()
-  create(@Body() createCartDto: CreateCartDto) {
-    return this.cartService.create(createCartDto);
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
+  @Post('create')
+  create(
+    @Body() createCartDto: CreateCartDto,
+    @GetUser() user: User,
+  ): Promise<CreateResponseDto> {
+    return this.cartService.create(createCartDto, user);
   }
 
   @Get()
-  findAll() {
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
+  findAll(): Promise<CreateResponseDto> {
     return this.cartService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartService.findOne(+id);
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
+  findOne(@Param('id') id: number): Promise<CreateResponseDto> {
+    return this.cartService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartService.update(+id, updateCartDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartService.remove(+id);
+  @Delete('delete/:id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(ROLE.USER)
+  remove(@Param('id') id: number): Promise<DeleteResponseDto> {
+    return this.cartService.remove(id);
   }
 }
