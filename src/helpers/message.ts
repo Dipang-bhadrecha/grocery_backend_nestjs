@@ -29,6 +29,7 @@ export const CART_NOTFOUND_MESSAGE = 'Not Found';
 export const CART_RETRIEVED_MESSAGE = 'Products retrieved successfully.';
 export const CART_FOUND_MESSAGE = 'Product found successfully.';
 export const OUT_OF_STOCK = 'Out of stock ';
+export const CART_EMPTY_MESSAGE = 'Cart is empty';
 
 export const USER_CREATED_MESSAGE = 'User created successfully';
 export const USER_EMAIL_AREADY_EXISTS = 'Email already exists';

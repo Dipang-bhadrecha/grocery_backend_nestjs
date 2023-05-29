@@ -18,6 +18,7 @@ import { error } from 'console';
 import {
   CART_CREATED_MESSAGE,
   CART_DELETED_MESSAGE,
+  CART_EMPTY_MESSAGE,
   CART_FOUND_MESSAGE,
   CART_NOTFOUND_MESSAGE,
   OUT_OF_STOCK,
@@ -90,7 +91,11 @@ export class CartService {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
-        [];
+        return {
+          statusCode: 200,
+          message: CART_EMPTY_MESSAGE,
+          data: [],
+        };
       }
       return {
         statusCode: 200,
