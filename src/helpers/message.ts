@@ -26,5 +26,12 @@ export const CART_CREATED_MESSAGE = 'Product created successFully.';
 export const CART_UPDATED_MESSAGE = 'Product updated successFully.';
 export const CART_DELETED_MESSAGE = 'Product deleted successFully.';
 export const CART_NOTFOUND_MESSAGE = 'Not Found';
-export const CART_RETRIEVED_MESSAGE = "'Products retrieved successfully.'";
+export const CART_RETRIEVED_MESSAGE = 'Products retrieved successfully.';
 export const CART_FOUND_MESSAGE = 'Product found successfully.';
+export const OUT_OF_STOCK = 'Out of stock ';
+export const CART_EMPTY_MESSAGE = 'Cart is empty';
+
+export const USER_CREATED_MESSAGE = 'User created successfully';
+export const USER_EMAIL_AREADY_EXISTS = 'Email already exists';
+export const USER_UPDATED_MESSAGE = 'User updated successfully';
+export const USER_DELETED_MESSAGE = 'User deleted successfully';
