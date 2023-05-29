@@ -1,5 +1,6 @@
-export default class CreateResponseDto {
+
+export default class ResponseDto {
   statusCode: number;
-  message: string;
-  data: any;
+  message?: string;
+  data?: any;
 }

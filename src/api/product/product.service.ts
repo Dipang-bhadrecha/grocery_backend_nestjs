@@ -25,7 +25,6 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
-    private readonly categoryServices: CategoryService,
   ) {}
 
   // create product
