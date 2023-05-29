@@ -34,7 +34,7 @@ export class AuthService {
         throw new UnauthorizedException('Please check your login credentials');
       }
 
-      const payload: JwtPayload = { email: user.email };
+      const payload: JwtPayload = { email: user.email, role: user.role };
       const accessToken: string = await this.jwtService.sign(payload);
 
       return { accessToken };
