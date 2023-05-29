@@ -12,6 +12,7 @@ import CreateResponseDto from 'src/utils/create-respons.dto';
 import UpdateResponseDto from 'src/utils/update-response.dto';
 import {
   CATEGORY_CREATED_MESSAGE,
+  PRODUCT_CREATED_MESSAGE,
   PRODUCT_DELETED_MESSAGE,
   PRODUCT_NOTFOUND_MESSAGE,
   PRODUCT_RETRIEVED_MESSAGE,
@@ -40,7 +41,7 @@ export class ProductService {
       const result = await this.productRepository.save(product);
       return {
         statusCode: 201,
-        message: CATEGORY_CREATED_MESSAGE,
+        message: PRODUCT_CREATED_MESSAGE,
         data: result,
       };
     } catch (error) {
@@ -58,7 +59,7 @@ export class ProductService {
     limit: number,
   ): Promise<CreateResponseDto> {
     try {
-      const limit = 10;
+      limit = limit || 10;
       const skip = (page - 1) * limit;
       const product = this.productRepository.createQueryBuilder('product');
 
@@ -70,7 +71,7 @@ export class ProductService {
       const products = await product.getMany();
 
       if (products.length === 0) {
-        throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(PRODUCT_NOTFOUND_MESSAGE, HttpStatus.NOT_FOUND);
       }
 
       return {
@@ -91,7 +92,7 @@ export class ProductService {
     try {
       const product = await this.productRepository.findOneBy({ id });
       if (!product) {
-        throw new HttpException('product not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(PRODUCT_NOTFOUND_MESSAGE, HttpStatus.NOT_FOUND);
       }
       return {
         statusCode: 200,

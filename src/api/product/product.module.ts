@@ -12,8 +12,10 @@ import { CategoryModule } from '../category/category.module';
     CategoryModule,
     MulterModule.register(multerOptions),
     TypeOrmModule.forFeature([Product]),
+    forwardRef(() => CategoryModule),
   ],
   controllers: [ProductController],
   providers: [ProductService],
+  exports: [ProductService],
 })
 export class ProductModule {}

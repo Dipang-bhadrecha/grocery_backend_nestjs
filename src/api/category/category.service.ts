@@ -13,6 +13,7 @@ import CreateResponseDto from 'src/utils/create-respons.dto';
 import DeleteResponseDto from 'src/utils/delete-response.dto';
 import UpdateResponseDto from 'src/utils/update-response.dto';
 import {
+  CART_NOTFOUND_MESSAGE,
   CATEGORYNAME_ALREADY_USED_MESSAGE,
   CATEGORY_CREATED_MESSAGE,
   CATEGORY_DELETED_MESSAGE,
@@ -102,7 +103,7 @@ export class CategoryService {
     try {
       const category = await this.categoryRepository.findOneBy({ id });
       if (!category) {
-        throw new HttpException('category not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(CART_NOTFOUND_MESSAGE, HttpStatus.NOT_FOUND);
       }
       return {
         statusCode: 200,
