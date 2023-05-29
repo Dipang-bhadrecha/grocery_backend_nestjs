@@ -9,6 +9,7 @@ import { CategoryModule } from '../category/category.module';
 
 @Module({
   imports: [
+    CategoryModule,
     MulterModule.register(multerOptions),
     TypeOrmModule.forFeature([Product]),
     forwardRef(() => CategoryModule),
