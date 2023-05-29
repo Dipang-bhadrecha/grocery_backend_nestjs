@@ -45,7 +45,7 @@ export class ProductController {
 
   @Get()
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(ROLE.USER)
+  @Roles(ROLE.USER || ROLE.ADMIN)
   async findAll(
     @Query('name') name: string,
     @Query('page') page: number,
@@ -56,7 +56,7 @@ export class ProductController {
 
   @Get(':id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(ROLE.USER)
+  @Roles(ROLE.USER || ROLE.ADMIN)
   findOne(@Param('id') id: number): Promise<CreateResponseDto> {
     return this.productService.findOne(id);
   }
