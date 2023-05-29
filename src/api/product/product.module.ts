@@ -12,6 +12,6 @@ import { multerOptions } from 'src/helpers/fileUpload';
     TypeOrmModule.forFeature([Product]),
   ],
   controllers: [ProductController],
-  providers: [ProductService]
+  providers: [ProductService],
 })
-export class ProductModule { }
+export class ProductModule {}

@@ -19,6 +19,7 @@ import {
 import { GetUserResponse } from './interfaces/get-user-interface';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserRespnonse } from './interfaces/update-user-interface';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UserService {
@@ -136,6 +137,37 @@ export class UserService {
           message: USER_UPDATED_MESSAGE,
         };
       }
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async changePassword(
+    changePasswordDto: ChangePasswordDto,
+    user: User,
+  ): Promise<UpdateUserRespnonse> {
+    try {
+      const { password, new_password } = changePasswordDto;
+
+      const passwordvalidation = await bcrypt.compare(password, user.password);
+
+      if (!passwordvalidation) {
+        throw new BadRequestException('Please check your password');
+      }
+
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(new_password, salt);
+
+      user.password = hashedPassword;
+      await this.userRepository.save(user);
+
+      return {
+        statusCode: 200,
+        message: 'Password changed successfully',
+      };
     } catch (error) {
       throw new HttpException(
         error.message,
