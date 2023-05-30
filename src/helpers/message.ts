@@ -22,12 +22,14 @@ export const OFFER_ALREADY_SET_MESSAGE = 'Category already have the offer.';
 export const OFFER_DELETED_MESSAGE = 'Offer deleted successFully.';
 export const OFFER_NOT_FOUND = 'Not Found';
 
-export const CART_CREATED_MESSAGE = 'Product created successFully.';
-export const CART_UPDATED_MESSAGE = 'Product updated successFully.';
-export const CART_DELETED_MESSAGE = 'Product deleted successFully.';
+export const CART_CREATED_MESSAGE = 'Cart created successFully.';
+export const CART_UPDATED_MESSAGE = 'Cart updated successFully.';
+export const CART_DELETED_MESSAGE = 'Cart deleted successFully.';
 export const CART_NOTFOUND_MESSAGE = 'Not Found';
-export const CART_RETRIEVED_MESSAGE = 'Products retrieved successfully.';
-export const CART_FOUND_MESSAGE = 'Product found successfully.';
+export const CART_RETRIEVED_MESSAGE = 'Carts retrieved successfully.';
+export const CART_FOUND_MESSAGE = 'Cart found successfully.';
+export const CART_EMPTY_MESSAGE = 'Cart is empty';
+export const OUT_OF_STOCK = 'Out of Stock';
 
 export const USER_CREATED_MESSAGE = 'User registered successfully';
 export const USER_UPDATED_MESSAGE = 'User updated successfully';

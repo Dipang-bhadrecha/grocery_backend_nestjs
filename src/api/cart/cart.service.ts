@@ -22,8 +22,8 @@ import {
   CART_FOUND_MESSAGE,
   CART_NOTFOUND_MESSAGE,
   OUT_OF_STOCK,
-  PRODUCT_NOTFOUND_MESSAGE,
 } from 'src/helpers/message';
+import DeleteResponseDto from 'src/utils/delete-response.dto';
 
 @Injectable()
 export class CartService {
@@ -131,7 +131,7 @@ export class CartService {
   }
 
   //Delete cart
-  async remove(id: number): Promise<CreateResponseDto> {
+  async remove(id: number): Promise<DeleteResponseDto> {
     try {
       const cart = await this.cartTable.findOne({ where: { id } });
       if (!cart) {
@@ -141,7 +141,6 @@ export class CartService {
       return {
         statusCode: 204,
         message: CART_DELETED_MESSAGE,
-        data: result,
       };
     } catch (error) {
       throw new HttpException(
